@@ -2,24 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControl : MonoBehaviour
+public class PlayerControl: MonoBehaviour
 {
+    Rigidbody rb;
+    public float forceMultiplier = 10f;
     // Start is called before the first frame update
-    public Rigidbody playerRB;
-    public float horizontal;
     void Start()
     {
-        
+        rb = this.gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        playerRB.AddForce(Vector3.forward, ForceMode.Impulse);
+        float x = Input.GetAxis("Horizontal") * forceMultiplier;
+        float y = Input.GetAxis("Vertical") * forceMultiplier;
 
-       
-        playerRB.AddForce(Vector3.right*horizontal, ForceMode.Impulse);
-       
+        rb.AddForce(Vector3.forward * y);
+        rb.AddForce(Vector3.right * x);
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Obstacle"))
+        {
+            Destroy(this.gameObject);
+
+
+        }
     }
 }
+
